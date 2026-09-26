@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import type { ChatMessage } from "../../types";
 import { ChatContext, type ChatContextValue } from "./ChatContext";
 

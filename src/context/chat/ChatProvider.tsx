@@ -1,15 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import {
-  deleteNotification,
-  receiveNotification,
-  sendMessage as apiSendMessage,
-} from "../../api/greenApi";
+import { sendMessage as apiSendMessage } from "../../api/greenApi";
 import { phoneToChatId } from "../../lib/normalizePhone";
-import { parseIncomingText } from "../../lib/notification";
 import type { ChatMessage } from "../../types";
 import { MAX_MESSAGE_LENGTH } from "../../types";
 import { useSession } from "../session/useSession";
 import { ChatContext, type ChatContextValue } from "./ChatContext";
+import { useIncomingNotificationPoll } from "./useIncomingNotificationPoll";
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated, apiUrl, idInstance, apiTokenInstance } = useSession();
@@ -94,49 +90,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, resetChat]);
 
-  useEffect(() => {
-    if (!isAuthenticated || !chatId) {
-      return;
-    }
-
-    const credentials = { apiUrl, idInstance, apiTokenInstance };
-    let cancelled = false;
-
-    const pollOnce = async () => {
-      if (cancelled || !chatIdRef.current) {
-        return;
-      }
-
-      try {
-        const notification = await receiveNotification(credentials);
-        if (cancelled || !chatIdRef.current) {
-          return;
-        }
-
-        if (notification) {
-          await deleteNotification(credentials, notification.receiptId);
-          const incoming = parseIncomingText(notification.body);
-          if (incoming) {
-            appendMessage(incoming);
-          }
-        }
-      } catch {
-        if (cancelled) {
-          return;
-        }
-      }
-
-      if (!cancelled && chatIdRef.current) {
-        void pollOnce();
-      }
-    };
-
-    void pollOnce();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthenticated, chatId, apiUrl, idInstance, apiTokenInstance, appendMessage]);
+  useIncomingNotificationPoll({
+    enabled: isAuthenticated && chatId !== null,
+    chatId,
+    credentials: { apiUrl, idInstance, apiTokenInstance },
+    onMessage: appendMessage,
+  });
 
   const value: ChatContextValue = {
     chatId,

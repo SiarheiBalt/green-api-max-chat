@@ -8,7 +8,7 @@ function formatTime(timestampSec: number): string {
   return date.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 }
 
-export function ChatView() {
+const ChatView = () => {
   const { logout } = useSession();
   const { recipientPhone, messages, error, isSending, sendMessage, resetChat } = useChat();
   const [draft, setDraft] = useState("");
@@ -113,3 +113,5 @@ export function ChatView() {
     </div>
   );
 }
+
+export default ChatView;

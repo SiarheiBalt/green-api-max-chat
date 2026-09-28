@@ -1,6 +1,6 @@
-import { CredentialsForm } from "./components/CredentialsForm";
-import { ChatView } from "./components/ChatView";
-import { NewChatForm } from "./components/NewChatForm";
+import CredentialsForm from "./components/CredentialsForm";
+import ChatView from "./components/ChatView";
+import NewChatForm from "./components/NewChatForm";
 import { useSession } from "./context/session/useSession";
 import { useChat } from "./context/chat/useChat";
 import "./styles/app.css";

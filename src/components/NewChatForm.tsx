@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useChat } from "../context/chat/useChat";
 import { useSession } from "../context/session/useSession";
 
-export function NewChatForm() {
+const NewChatForm = () => {
   const { logout } = useSession();
   const { openChat, error, resetChat } = useChat();
   const [phone, setPhone] = useState("");
@@ -53,3 +53,5 @@ export function NewChatForm() {
     </div>
   );
 }
+
+export default NewChatForm;

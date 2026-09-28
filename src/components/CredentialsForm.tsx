@@ -1,13 +1,13 @@
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent  } from "react";
 import { useSession } from "../context/session/useSession";
 
-export function CredentialsForm() {
+const CredentialsForm = () => {
   const { login } = useSession();
   const [idInstance, setIdInstance] = useState("");
   const [apiTokenInstance, setApiTokenInstance] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = (event: SubmitEvent ) => {
     event.preventDefault();
     const id = idInstance.trim();
     const token = apiTokenInstance.trim();
@@ -69,3 +69,5 @@ export function CredentialsForm() {
     </div>
   );
 }
+
+export default CredentialsForm;

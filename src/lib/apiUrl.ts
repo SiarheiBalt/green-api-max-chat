@@ -10,6 +10,7 @@ export function normalizeApiUrl(input: string): string {
   return trimmed;
 }
 
+// к какому API-серверу ходить, определяют первые 4 цифры idInstance.
 export function resolveApiUrlFromInstance(idInstance: string): string {
   const fromEnv = import.meta.env.VITE_GREEN_API_URL?.trim();
   if (fromEnv) {

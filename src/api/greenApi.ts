@@ -5,11 +5,12 @@ import type {
   ReceiveNotificationResult,
   SendMessageResult,
 } from "../types";
+import { requestApiBase } from "../lib/apiUrl";
 
 const RECEIVE_TIMEOUT_SEC = 5;
 
 function instanceUrl(credentials: GreenApiCredentials, method: string): string {
-  const apiUrl = credentials.apiUrl.replace(/\/+$/, "");
+  const apiUrl = requestApiBase(credentials.apiUrl);
   const { idInstance, apiTokenInstance } = credentials;
   return `${apiUrl}/waInstance${idInstance}/${method}/${apiTokenInstance}`;
 }

@@ -5,7 +5,7 @@ export interface SessionContextValue {
   idInstance: string;
   apiTokenInstance: string;
   isAuthenticated: boolean;
-  login: (idInstance: string, apiTokenInstance: string, apiUrl?: string) => void;
+  login: (idInstance: string, apiTokenInstance: string) => void;
   logout: () => void;
 }
 

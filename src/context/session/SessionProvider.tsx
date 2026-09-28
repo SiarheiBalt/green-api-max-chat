@@ -1,34 +1,27 @@
 import { useCallback, useState, type ReactNode } from "react";
+import { resolveApiUrlFromInstance } from "../../lib/apiUrl";
 import { SessionContext, type SessionContextValue } from "./SessionContext";
 
-const DEFAULT_API_URL = "https://api.green-api.com";
-
 export function SessionProvider({ children }: { children: ReactNode }) {
-  const [apiUrl, setApiUrl] = useState(DEFAULT_API_URL);
+  const [apiUrl, setApiUrl] = useState("");
   const [idInstance, setIdInstance] = useState("");
   const [apiTokenInstance, setApiTokenInstance] = useState("");
 
-  const login = useCallback(
-    (nextIdInstance: string, nextApiTokenInstance: string, nextApiUrl?: string) => {
-      const id = nextIdInstance.trim();
-      const token = nextApiTokenInstance.trim();
-      if (!id || !token) {
-        return;
-      }
-      setIdInstance(id);
-      setApiTokenInstance(token);
-      const url = nextApiUrl?.trim();
-      if (url) {
-        setApiUrl(url);
-      }
-    },
-    [],
-  );
+  const login = useCallback((nextIdInstance: string, nextApiTokenInstance: string) => {
+    const id = nextIdInstance.trim();
+    const token = nextApiTokenInstance.trim();
+    if (!id || !token) {
+      return;
+    }
+    setIdInstance(id);
+    setApiTokenInstance(token);
+    setApiUrl(resolveApiUrlFromInstance(id));
+  }, []);
 
   const logout = useCallback(() => {
     setIdInstance("");
     setApiTokenInstance("");
-    setApiUrl(DEFAULT_API_URL);
+    setApiUrl("");
   }, []);
 
   const isAuthenticated = idInstance.length > 0 && apiTokenInstance.length > 0;

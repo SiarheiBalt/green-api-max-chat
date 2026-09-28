@@ -1,15 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { greenApiDevProxyPlugin } from "./vite.greenApiProxy";
 
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    proxy: {
-      "/api": {
-        target: "https://api.green-api.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
-  },
+  plugins: [react(), greenApiDevProxyPlugin()],
 });

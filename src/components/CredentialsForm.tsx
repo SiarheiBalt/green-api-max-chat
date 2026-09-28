@@ -5,7 +5,6 @@ export function CredentialsForm() {
   const { login } = useSession();
   const [idInstance, setIdInstance] = useState("");
   const [apiTokenInstance, setApiTokenInstance] = useState("");
-  const [apiUrl, setApiUrl] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
   const handleSubmit = (event: FormEvent) => {
@@ -17,8 +16,11 @@ export function CredentialsForm() {
       return;
     }
     setLocalError(null);
-    const url = apiUrl.trim();
-    login(id, token, url || undefined);
+    try {
+      login(id, token);
+    } catch (e) {
+      setLocalError(e instanceof Error ? e.message : "Не удалось войти");
+    }
   };
 
   return (
@@ -39,7 +41,8 @@ export function CredentialsForm() {
             onChange={(e) => setIdInstance(e.target.value)}
             autoComplete="off"
             spellCheck={false}
-            placeholder="1234567890"
+            placeholder="310022747335"
+            required
           />
         </label>
 
@@ -53,22 +56,7 @@ export function CredentialsForm() {
             onChange={(e) => setApiTokenInstance(e.target.value)}
             autoComplete="off"
             spellCheck={false}
-          />
-        </label>
-
-        <label className="field">
-          <span className="field-label">
-            API URL <span className="field-optional">(необязательно, для обхода CORS)</span>
-          </span>
-          <input
-            className="field-input"
-            type="text"
-            name="apiUrl"
-            value={apiUrl}
-            onChange={(e) => setApiUrl(e.target.value)}
-            autoComplete="off"
-            spellCheck={false}
-            placeholder="/api или https://api.green-api.com"
+            required
           />
         </label>
 

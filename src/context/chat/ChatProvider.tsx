@@ -102,30 +102,36 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     const credentials = { apiUrl, idInstance, apiTokenInstance };
     let cancelled = false;
 
-    const poll = async () => {
-      while (!cancelled && chatIdRef.current) {
-        try {
-          const notification = await receiveNotification(credentials);
-          if (cancelled || !chatIdRef.current) {
-            break;
-          }
+    const pollOnce = async () => {
+      if (cancelled || !chatIdRef.current) {
+        return;
+      }
 
-          if (notification) {
-            await deleteNotification(credentials, notification.receiptId);
-            const incoming = parseIncomingText(notification.body);
-            if (incoming) {
-              appendMessage(incoming);
-            }
-          }
-        } catch {
-          if (cancelled) {
-            break;
+      try {
+        const notification = await receiveNotification(credentials);
+        if (cancelled || !chatIdRef.current) {
+          return;
+        }
+
+        if (notification) {
+          await deleteNotification(credentials, notification.receiptId);
+          const incoming = parseIncomingText(notification.body);
+          if (incoming) {
+            appendMessage(incoming);
           }
         }
+      } catch {
+        if (cancelled) {
+          return;
+        }
+      }
+
+      if (!cancelled && chatIdRef.current) {
+        void pollOnce();
       }
     };
 
-    void poll();
+    void pollOnce();
 
     return () => {
       cancelled = true;

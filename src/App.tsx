@@ -1,3 +1,6 @@
+import { CredentialsForm } from "./components/CredentialsForm";
+import { ChatView } from "./components/ChatView";
+import { NewChatForm } from "./components/NewChatForm";
 import { useSession } from "./context/session/useSession";
 import { useChat } from "./context/chat/useChat";
 import "./styles/app.css";
@@ -9,7 +12,7 @@ export default function App() {
   if (!isAuthenticated) {
     return (
       <main className="app-shell">
-        <p className="app-placeholder">Вход — форма учётных данных (скоро)</p>
+        <CredentialsForm />
       </main>
     );
   }
@@ -17,14 +20,14 @@ export default function App() {
   if (!chatId) {
     return (
       <main className="app-shell">
-        <p className="app-placeholder">Новый чат — форма номера (скоро)</p>
+        <NewChatForm />
       </main>
     );
   }
 
   return (
-    <main className="app-shell">
-      <p className="app-placeholder">Чат (скоро)</p>
+    <main className="app-shell app-shell--chat">
+      <ChatView />
     </main>
   );
 }

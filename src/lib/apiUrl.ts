@@ -1,6 +1,6 @@
 /**
  * Базовый URL GREEN-API: из VITE_GREEN_API_URL или по префиксу idInstance.
- * В dev запросы идут через прокси Vite: /api/<host>/… → https://<host>/…
+ * Запросы идут напрямую на https://<host>/… (в dev возможен CORS).
  */
 export function normalizeApiUrl(input: string): string {
   const trimmed = input.trim().replace(/\/+$/, "");
@@ -24,30 +24,4 @@ export function resolveApiUrlFromInstance(idInstance: string): string {
   }
 
   return `https://${prefix}.api.green-api.com`;
-}
-
-export function requestApiBase(apiUrl: string): string {
-  const normalized = apiUrl.replace(/\/+$/, "");
-
-  if (!import.meta.env.DEV) {
-    return normalized;
-  }
-
-  if (normalized.startsWith("/api/")) {
-    return normalized;
-  }
-
-  if (normalized === "/api") {
-    return "/api/api.green-api.com";
-  }
-
-  const withProtocol = normalized.startsWith("http") ? normalized : `https://${normalized}`;
-  try {
-    const parsed = new URL(withProtocol);
-    const pathPrefix =
-      parsed.pathname === "/" ? "" : parsed.pathname.replace(/\/+$/, "");
-    return `/api/${parsed.host}${pathPrefix}`;
-  } catch {
-    return normalized;
-  }
 }

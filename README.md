@@ -24,11 +24,9 @@ npm run dev
 
 Базовый URL API подставляется автоматически: `https://<первые 4 цифры idInstance>.api.green-api.com` (например, `310022747335` → `https://3100.api.green-api.com`). Если в кабинете другой хост — задайте `.env`: `VITE_GREEN_API_URL=https://….api.green-api.com` (см. `.env.example`).
 
-### CORS и прокси Vite
+### CORS
 
-В dev браузер ходит на свой origin; Vite проксирует `/api/<хост>/waInstance…` → `https://<хост>/waInstance…`.
-
-Для production (`npm run build`) нужен reverse-proxy к GREEN-API или бэкенд; одного фронтенда без прокси часто недостаточно из‑за CORS.
+Запросы идут из браузера напрямую на `https://<хост>.api.green-api.com`. Если в консоли CORS — нужен reverse-proxy или dev-прокси (см. `vite.greenApiProxy.ts`, сейчас не подключён).
 
 ## Сценарий использования
 

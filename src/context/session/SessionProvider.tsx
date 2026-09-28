@@ -10,10 +10,16 @@ export function SessionProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(
     (nextIdInstance: string, nextApiTokenInstance: string, nextApiUrl?: string) => {
-      setIdInstance(nextIdInstance.trim());
-      setApiTokenInstance(nextApiTokenInstance.trim());
-      if (nextApiUrl?.trim()) {
-        setApiUrl(nextApiUrl.trim());
+      const id = nextIdInstance.trim();
+      const token = nextApiTokenInstance.trim();
+      if (!id || !token) {
+        return;
+      }
+      setIdInstance(id);
+      setApiTokenInstance(token);
+      const url = nextApiUrl?.trim();
+      if (url) {
+        setApiUrl(url);
       }
     },
     [],

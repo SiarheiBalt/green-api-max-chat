@@ -1,8 +1,10 @@
-import { useCallback, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import type { ChatMessage } from "../../types";
+import { useSession } from "../session/useSession";
 import { ChatContext, type ChatContextValue } from "./ChatContext";
 
 export function ChatProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useSession();
   const [chatId, setChatId] = useState<string | null>(null);
   const [recipientPhone, setRecipientPhone] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -33,6 +35,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     setError(null);
     setIsSending(false);
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      resetChat();
+    }
+  }, [isAuthenticated, resetChat]);
 
   const value: ChatContextValue = {
     chatId,
